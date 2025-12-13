@@ -1,0 +1,29 @@
+pipeline {
+    
+    agent { 
+        node{
+            label "dev"
+            
+        }
+    }
+    
+    stages{
+        stage("Clone Code"){
+            steps{
+                git url: "https://github.com/dhimanankit1593/nodejspipeline.git", branch: "main"
+               
+            }
+        }
+        stage("Build & Test"){
+            steps{
+                sh "docker build . -t nodes-app-jenkins:latest"
+            }
+        }
+        
+        stage("Deploy"){
+            steps{
+                sh "docker run -d   --name nodes-app-jenkins   --restart unless-stopped   -p 8002:8002   nodes-app-jenkins:latest"
+            }
+        }
+    }
+}
